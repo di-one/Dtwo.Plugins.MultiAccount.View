@@ -1,0 +1,137 @@
+﻿@using API;
+@using Dtwo.Plugins.MultiAccount.View.Components;
+@implements IDisposable;
+
+<!-- Menu (hide/show, move) -->
+<div class="group-menu titlebar" style="height:30px; width:80px;" @onmousedown="(args) => StartDragWindow()">
+    <button class="btn titlebar-button" @onclick="OnClickHideButton"><i class="@GetHideButtonClassString()">-</i></button>
+</div>
+
+@if (_hide == false)
+{
+    <DtwoStack style="width:80px; margin:0px; padding:0px;" Orientation=EStackOrientation.Vertical>
+        @foreach (var account in _accounts)
+        {
+            <FloatingWindowAccountItem Controller="@account"></FloatingWindowAccountItem>
+        }
+    </DtwoStack>
+}
+
+@code {
+    public List<MultiAccountController> _accounts;
+
+    //public IReadOnlyDictionary<string, MultiAccountController> Accounts = 
+    private bool _hide;
+    // private MudDropContainer<MultiAccountController> _container;
+
+    protected override void OnInitialized()
+    {
+        MultiAccount.MultiAccountManager.OnReOrdered += OnReOrder;
+        MultiAccount.MultiAccountManager.OnSelect += OnSelect;
+        MultiAccount.MultiAccountManager.OnStop += OnStop;
+
+        _hide = false;
+        SetAccounts();
+
+        base.OnInitialized();
+    }
+
+    private void SetAccounts()
+    {
+        try
+        {
+            var accounts = MultiAccount.MultiAccountManager.Accounts;
+
+            List<MultiAccountController> lst = new();
+            foreach (var a in accounts)
+            {
+                lst.Add(a.Value);
+            }
+
+            _accounts = lst;
+        }
+        catch (Exception ex)
+        {
+            LogManager.LogError(
+                   $"{nameof(FloatingWindow)}.{SetAccounts}",
+                   ex.ToString());
+        }
+    }
+
+    // private void ItemUpdated(MudItemDropInfo<MultiAccountController> dropItem)
+    // {
+    //     // force re order
+    //     MultiAccount.MultiAccountManager.ForceReOrder(dropItem.Item, dropItem.IndexInZone);
+    // }
+
+    private string GetHideButtonClassString()
+    {
+        if (_hide)
+        {
+            return "fas fa-plus-square";   
+        }
+        else
+        {
+            return "fas fa-minus-square";
+        }
+    }
+
+    private void OnClickHideButton()
+    {
+        _hide = !_hide;
+
+        this.StateHasChanged();
+
+        // Resize window
+        if (_hide)
+        {
+            MultiAccount_ViewPlugin_Manager.MinimizeWindow();
+        }
+        else
+        {
+            MultiAccount_ViewPlugin_Manager.MaximizeWindow();
+        }
+    }
+
+    private void OnReOrder()
+    {
+        SetAccounts();
+        this.InvokeAsync(() =>
+        {
+            this.StateHasChanged();
+        });
+        // _container.Refresh();
+    }
+
+    private void OnSelect()
+    { 
+        SetAccounts();
+
+        this.InvokeAsync(() =>
+        {
+            this.StateHasChanged();
+        });
+    }
+
+    private void OnStop()
+    {
+        this.InvokeAsync(() =>
+       {
+           MultiAccount.MultiAccountManager.OnReOrdered -= OnReOrder;
+           MultiAccount.MultiAccountManager.OnSelect -= OnSelect;
+           MultiAccount.MultiAccountManager.OnStop -= OnStop;
+
+           MultiAccount_ViewPlugin_Manager.CloseWindow();
+       });
+    }
+
+    private void StartDragWindow()
+    {
+        MultiAccount_ViewPlugin_Manager.FloatingWindow.StartDrag();
+    }
+
+    public void Dispose()
+    {
+      
+    }
+}

@@ -1,0 +1,20 @@
+﻿.titlebar {
+    background-color: darkblue;
+}
+
+.titlebar-button {
+    color: white;
+}
+
+.right-window .btn {
+    width: 80vw;
+    height: 80vw;
+}
+
+html, body {
+    background-color: red;
+}
+
+.group-menu {
+    background-color: black;
+}

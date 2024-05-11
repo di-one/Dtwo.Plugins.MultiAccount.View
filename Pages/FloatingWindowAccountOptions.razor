@@ -1,0 +1,45 @@
+﻿@using MultiAccount;
+@inherits Dtwo.API.View.ViewPluginPage;
+
+<MudContainer Class="mud-theme-dark">
+	<MudButton OnClick="OnClickDelete" Color="MudBlazor.Color.Warning">Delete</MudButton>
+	<MudCheckBox Color="MudBlazor.Color.Inherit" Label="Mule" Checked="@isMule" />
+</MudContainer>
+@code {
+	private CharacterPreferences preferences;
+	private bool isMule
+	{
+		get
+		{
+			return m_isMule;
+		}
+		set
+		{
+			preferences.IsMule = value;
+			m_isMule = value;
+
+			MultiAccount_Plugin.Instance.SaveFile<List<CharacterPreferences>>("characters_preferences", MultiAccountManager.CharacterPreferences);
+		}
+	}
+
+	private bool m_isMule;
+
+	protected override void OnInitialized()
+	{
+		preferences = MultiAccountManager.GetCharacterPreferences(MultiAccount_ViewPlugin_Manager.ShowedOptionsAccount);
+		isMule = preferences.IsMule;
+
+		base.OnInitialized();
+	}
+
+	// private void OnClickDelete()
+	// {
+	// 	MultiAccountManager.RemoveController(MultiAccount_ViewPlugin_Manager.ShowedOptionsAccount);
+	// 	MultiAccount_ViewPlugin_Manager.HideWindowOptions();
+	// }
+
+	private void OnCheckIsMule(bool b)
+	{
+		
+	}
+}

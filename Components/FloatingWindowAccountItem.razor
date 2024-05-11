@@ -1,0 +1,106 @@
+﻿@implements IDisposable;
+@using Dtwo.API;
+@using Dtwo.Plugins.MultiAccount;
+
+@* <DtwoCard style="height:80px; width:100%;"> *@
+    <DtwoButton style="width:80px;height:80px;margin:0px;padding:0px;" OnClicked="(args) => SelectPlayer()" class="@GetPlayerClassString()">
+    <DtwoImage style="width:80px;height:80px;margin:0px;padding:0px;" Path="@SpritesManager.GetCharacterIconPath(Controller.DofusWindow.Character.Breed, Controller.DofusWindow.Character.Sex)" />
+    </DtwoButton>
+@* </DtwoCard> *@
+
+
+@code {
+    [Parameter]
+    public MultiAccountController Controller { get; set; }
+    private bool dropDownIsShowed = false;
+
+    protected override void OnInitialized()
+    {
+        MultiAccountManager.OnSelect += OnSelect;
+
+        base.OnInitialized();
+    }
+
+
+    private void SelectPlayer()
+    {
+        DofusWindow.SelectDofusWindow(Controller.DofusWindow);
+        MultiAccountManager.SelectWindow(Controller);
+        StateHasChanged();
+    }
+
+
+    private string GetPlayerClassString()
+    {
+        if (MultiAccountManager.SelectedAccount == Controller)
+        {
+            return "btn btn-success";
+        }
+        else
+        {
+            return "btn btn-primary";
+        }
+    }
+
+    private void OnSelect()
+    { 
+        this.InvokeAsync(() =>
+        {
+            this.StateHasChanged();
+        });
+    }
+
+    // private void OnRightClick(MouseEventArgs args)
+    // {
+    //     if (args.Button == 2)
+    //     {
+    //         if (dropDownIsShowed == false)
+    //         {
+    //             if (MultiAccount_ViewPlugin_Manager.ShowedOptionsAccount != null && MultiAccount_ViewPlugin_Manager.ShowedOptionsAccount != Controller)
+    //             {
+    //                 MultiAccount_ViewPlugin_Manager.HideWindowOptions();
+    //                 MultiAccount_ViewPlugin_Manager.ShowWindowOptions(Controller);
+
+    //                 dropDownIsShowed = true;
+    //             }
+    //             else
+    //             {
+    //                 if (MultiAccount_ViewPlugin_Manager.ShowedOptionsAccount == Controller)
+    //                 {
+    //                     MultiAccount_ViewPlugin_Manager.HideWindowOptions();
+
+    //                     dropDownIsShowed = false;
+    //                 }
+    //                 else
+    //                 {
+    //                     MultiAccount_ViewPlugin_Manager.ShowWindowOptions(Controller);
+
+    //                     dropDownIsShowed = true;
+    //                 }
+    //             }
+    //         }
+    //         else
+    //         {
+    //             if (MultiAccount_ViewPlugin_Manager.ShowedOptionsAccount != Controller)
+    //             {
+    //                 MultiAccount_ViewPlugin_Manager.HideWindowOptions();
+    //                 MultiAccount_ViewPlugin_Manager.ShowWindowOptions(Controller);
+
+    //                 dropDownIsShowed = true;
+    //             }
+    //             else
+    //             {
+    //                 MultiAccount_ViewPlugin_Manager.HideWindowOptions();
+    //                 dropDownIsShowed = false;
+    //             }
+    //         }
+    //     }
+    // }
+
+    public void Dispose()
+    {
+         MultiAccountManager.OnSelect -= OnSelect;
+    }
+
+
+}

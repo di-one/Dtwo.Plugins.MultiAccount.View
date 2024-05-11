@@ -1,0 +1,185 @@
+﻿@using MultiAccount;
+
+<DtwoGrid Gap="2rem" class="rz-p-0 rz-p-lg-4">
+    <DtwoGridItem Size="6" SizeLG="6" SizeXL="6" SizeXX="6" SizeMD="12" SizeSM="12" SizeXS="12">
+            <DtwoForm TValue="OptionsSettings" Value="@MultiAccountManager.Options" FormData="@OptionsBaseFormData" />
+    </DtwoGridItem>
+   <DtwoGridItem Size="6" SizeLG="6" SizeXL="6" SizeXX="6" SizeMD="12" SizeSM="12" SizeXS="12">
+        <DtwoForm TValue="OptionsInputs" Value="@MultiAccountManager.Options.Inputs" FormData="@OptionsInputsData" />
+    </DtwoGridItem>
+    <DtwoGridItem Size="6" SizeLG="6" SizeXL="6" SizeXX="6" SizeMD="12" SizeSM="12" SizeXS="12">
+        <DtwoForm TValue="OptionsDelays" Value="@MultiAccountManager.Options.Delays" FormData="@OptionsDelaysData" />
+     </DtwoGridItem>
+</DtwoGrid>
+
+
+@code {
+    private FormData OptionsBaseFormData = new FormData("Base", new List<FormData.Field>()
+    {
+        new FormData.Field()
+        {
+            FieldAsmName = "AutoSelectTurn",
+            Title = "(combat) Selection automatique des personnages",
+        },
+        new FormData.Field()
+        {
+            FieldAsmName = "AutoSelectTurn_PassDeath",
+            Title = "Passer le tour des morts",
+        },
+
+        new FormData.Field()
+        {
+            FieldAsmName = "AutoUpdateInitiative",
+            Title = "Auto Update Initiative",
+        },
+    });
+
+    private FormData OptionsInputsData = new FormData("Inputs", new List<FormData.Field>()
+    {
+        new FormData.Field()
+        {
+            FieldAsmName = nameof(MultiAccount.OptionsInputs.NextKey),
+            Title = "Personnage suivant",
+        },
+        new FormData.Field()
+        {
+            FieldAsmName = nameof(MultiAccount.OptionsInputs.PrevKey),
+            Title = "Personnage précédent",
+        },
+        new FormData.Field()
+        {
+            FieldAsmName = nameof(MultiAccount.OptionsInputs.PassTurnKey),
+            Title = "Passer le tour",
+        },
+        new FormData.Field()
+        {
+            FieldAsmName = nameof(MultiAccount.OptionsInputs.MultiClickKey),
+            Title = "Multi-click",
+        }
+    });
+
+    private FormData OptionsDelaysData = new FormData("Delays", new List<FormData.Field>()
+    {
+        new FormData.Field()
+        {
+            FieldAsmName = nameof(MultiAccount.OptionsDelays.DelayMultiClickMin),
+            Title = "Délai Multi-Click (Min)",
+            Validation = (value) =>
+            {
+                int val = (int)value;
+                if (val < 0)
+                {
+                    return false;
+                }
+
+                if (val >= MultiAccountManager.Options.Delays.DelayMultiClickMax)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        },
+        new FormData.Field()
+        {
+            FieldAsmName = nameof(MultiAccount.OptionsDelays.DelayMultiClickMax),
+            Title = "Délai Multi-Click (Max)",
+             Validation = (value) =>
+            {
+                int val = (int)value;
+                if (val < 0)
+                {
+                    return false;
+                }
+
+                if (val <= MultiAccountManager.Options.Delays.DelayMultiClickMin)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        },
+        new FormData.Field()
+        {
+            FieldAsmName = nameof(MultiAccount.OptionsDelays.DelayCharacterSelectionMin),
+            Title = "Délai Selection Personnages (Min)",
+            Validation = (value) =>
+            {
+                int val = (int)value;
+                if (val < 0)
+                {
+                    return false;
+                }
+
+                if (val >= MultiAccountManager.Options.Delays.DelayCharacterSelectionMax)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        },
+        new FormData.Field()
+        {
+            FieldAsmName = nameof(MultiAccount.OptionsDelays.DelayCharacterSelectionMax),
+            Title = "Délai Selection Personnages (Max)",
+            Validation = (value) =>
+            {
+                int val = (int)value;
+                if (val < 0)
+                {
+                    return false;
+                }
+
+                if (val >= MultiAccountManager.Options.Delays.DelayCharacterSelectionMin)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        },
+        new FormData.Field()
+        {
+            FieldAsmName = nameof(MultiAccount.OptionsDelays.DelayChatCharacterMin),
+            Title = "Délai par caractere dans le chat (Min)",
+            Validation = (value) =>
+            {
+                int val = (int)value;
+                if (val < 0)
+                {
+                    return false;
+                }
+
+                if (val >= MultiAccountManager.Options.Delays.DelayChatCharacterMax)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        },
+        new FormData.Field()
+        {
+            FieldAsmName = nameof(MultiAccount.OptionsDelays.DelayChatCharacterMax),
+            Title = "Délai par caractere dans le chat (Max)",
+            Validation = (value) =>
+            {
+                int val = (int)value;
+                if (val < 0)
+                {
+                    return false;
+                }
+
+                if (val >= MultiAccountManager.Options.Delays.DelayChatCharacterMin)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+    });
+
+}
