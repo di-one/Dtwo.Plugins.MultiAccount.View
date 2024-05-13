@@ -5,10 +5,10 @@
             <DtwoForm TValue="OptionsSettings" Value="@MultiAccountManager.Options" FormData="@OptionsBaseFormData" />
     </DtwoGridItem>
    <DtwoGridItem Size="6" SizeLG="6" SizeXL="6" SizeXX="6" SizeMD="12" SizeSM="12" SizeXS="12">
-        <DtwoForm TValue="OptionsInputs" Value="@MultiAccountManager.Options.Inputs" FormData="@OptionsInputsData" />
+        <DtwoForm TValue="OptionsInputs" Value="@MultiAccountManager.Options.Inputs" FormData="@OptionsInputsData" Disabled="@MultiAccountManager.IsStarted" />
     </DtwoGridItem>
     <DtwoGridItem Size="6" SizeLG="6" SizeXL="6" SizeXX="6" SizeMD="12" SizeSM="12" SizeXS="12">
-        <DtwoForm TValue="OptionsDelays" Value="@MultiAccountManager.Options.Delays" FormData="@OptionsDelaysData" />
+        <DtwoForm TValue="OptionsDelays" Value="@MultiAccountManager.Options.Delays" FormData="@OptionsDelaysData" Disabled="@MultiAccountManager.IsStarted" />
      </DtwoGridItem>
 </DtwoGrid>
 

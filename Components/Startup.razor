@@ -11,7 +11,13 @@
 			<DtwoSwitch Value=@InviteMembers Change=@((value) => InviteMembers = value) Name="AutoInvite" />
 		</DtwoStack>
 	</DtwoStack>
-@* 	<MudCheckBox @bind-Checked="InviteMembers" Label="Auto invite"> </MudCheckBox> *@
+}
+
+@if (MultiAccountManager.Options.Inputs.MultiClickKey.KeyId <= 0 || MultiAccountManager.Options.Inputs.NextKey.KeyId <= 0 || MultiAccountManager.Options.Inputs.PrevKey.KeyId <= 0)
+{
+    <DtwoAlert Style="EAlertStyle.Warning">
+        <b>Pense à bien configurer tes touches dans les options !</b>
+    </DtwoAlert>
 }
 
 @if (IsStarted)
@@ -47,7 +53,7 @@
 </DtwoGrid> 
 
 @code {
-	private IReadOnlyDictionary<string, MultiAccountController> AddedAccounts = MultiAccountManager.Accounts;
+	private IReadOnlyDictionary<DofusWindow, MultiAccountController> AddedAccounts = MultiAccountManager.Accounts;
 	private bool OptionsDialogOpenned = false;
 	private bool IsStarted = MultiAccountManager.IsStarted;
 	private bool InviteMembers;
@@ -65,7 +71,7 @@
 				continue;
 			}
 
-			if (AddedAccounts?.ContainsKey(window.Character.Name) == false)
+			if (AddedAccounts?.ContainsKey(window) == false)
 			{
 				ret.Add(window);
 			}
@@ -83,6 +89,7 @@
 		DofusWindow.OndofusWindowSelected += OnWindowSelected;
 		DofusWindow.OnDofusWindowStarted += OnDofusWindowAdded;
 		DofusWindow.OnDofusWindowStoped += OnDofusWindowStoped;
+
 		MultiAccountManager.OnStop += OnStop;
 	}
 
